@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>drag_box</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .item {
+        width: 50px;
+        height: 50px;
+        background-color: #f00;
+        position: absolute;
+      }
+      .item:hover {
+        cursor: grab;
+      }
+      .item:active {
+        cursor: grabbing;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box" class="item"></div>
+    <script>
+      var box = document.getElementById("box");
+      var moveFlag = false;
+      document.onmousedown = function (e) {
+        var e_item = e.target;
+        var x = e.clientX;
+        var y = e.clientY;
+        var l = e_item.offsetLeft;
+        var t = e_item.offsetTop;
+        var tempX = 0;
+        var tempY = 0;
+        var tempDiv = document.createElement("div");
+        tempDiv.setAttribute("id", "tempDiv");
+        tempDiv.setAttribute("class", "item");
+        document.onmousemove = function (e) {
+          var newX = e.clientX;
+          var newY = e.clientY;
+          tempX = newX - x;
+          tempY = newY - y;
+          tempDiv.style.cssText = `background-color:transparent;;border:3px dashed #f4f;left:${
+            l + tempX
+          }px;top:${t + tempY}px;cursor:grabbing;`;
+          document.body.insertBefore(tempDiv, document.body.lastChild);
+          moveFlag = true;
+        };
+        document.onmouseup = function (e) {
+          document.onmousemove = null;
+          if (moveFlag) {
+            document.body.removeChild(tempDiv);
+            e_item.style.cssText = `left:${l + tempX}px;top:${t + tempY}px;`;
+          }
+          moveFlag = false;
+        };
+      };
+    </script>
+  </body>
+</html>
